@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { from, fromEvent, of } from 'rxjs';
+import { firstValueFrom, from, fromEvent, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +31,10 @@ export class App {
     users$.subscribe((users) => {
       console.log(users);
     });
+
+    users$.toPromise().then((users) => console.log('toPromise:', users));
+
+    firstValueFrom(users$).then((users) => console.log('firstValueFrom:', users));
 
     const messagePromise = new Promise((resolve) => {
       setTimeout(() => {
