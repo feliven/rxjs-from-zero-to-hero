@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +10,14 @@ import { of } from 'rxjs';
 })
 export class App {
   protected readonly title = signal('rxjs-udemy');
+  data = signal<number>(0);
+
   constructor() {
-    const numbers$ = of([1, 2, 3, 4, 5]);
+    const numbers$ = from([1, 2, 3, 4, 5]);
 
     numbers$.subscribe((data) => {
       console.log('observer:', data);
+      this.data.set(data);
     });
   }
 }
