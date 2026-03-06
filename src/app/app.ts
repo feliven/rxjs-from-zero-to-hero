@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { from, of } from 'rxjs';
+import { from, fromEvent, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -41,6 +41,14 @@ export class App {
 
     message$.subscribe((message) => {
       console.log('promise:', message);
+    });
+
+    const bodyClick$ = fromEvent(document, 'click');
+    bodyClick$.subscribe((event) => {
+      if (event instanceof PointerEvent) {
+        console.log('eixo X:', event.x, 'eixo Y:', event.y);
+        console.log(event.pointerType);
+      }
     });
   }
 }
