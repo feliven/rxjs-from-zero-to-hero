@@ -10,16 +10,16 @@ import { firstValueFrom, from, fromEvent, Observable, of } from 'rxjs';
 })
 export class App {
   protected readonly title = signal('rxjs-udemy');
-  data = signal<number>(0);
 
   constructor() {
+    const users = [
+      { id: '1', name: 'John', age: 30 },
+      { id: '2', name: 'Mary', age: 40 },
+      { id: '3', name: 'Igor', age: 20 },
+    ];
+
     const users$ = new Observable((observer) => {
-      observer.next(1);
-      observer.next(1);
-      observer.next(2);
-      observer.next(3);
-      observer.complete();
-      observer.next(4);
+      observer.next(users);
     });
 
     users$.subscribe({
