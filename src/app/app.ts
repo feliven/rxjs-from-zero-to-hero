@@ -13,46 +13,24 @@ export class App {
   data = signal<number>(0);
 
   constructor() {
-    const numbers$ = from([1, 2, 3, 4, 5]);
-
-    numbers$.subscribe((data) => {
-      console.log('observer:', data);
-      this.data.set(data);
-    });
-
-    const users = [
-      { id: '1', name: 'John', age: 30 },
-      { id: '2', name: 'Mary', age: 40 },
-      { id: '3', name: 'Igor', age: 20 },
-    ];
-
-    const users$ = of(users);
-
-    users$.subscribe((users) => {
-      console.log(users);
-    });
-
-    users$.toPromise().then((users) => console.log('toPromise:', users));
-
-    firstValueFrom(users$).then((users) => console.log('firstValueFrom:', users));
-
-    const messagePromise = new Promise((resolve) => {
+    const messagePromise = new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve('Promise resolved');
+        reject('msg de ERRO');
       }, 1000);
     });
+
     const message$ = from(messagePromise);
 
-    message$.subscribe((message) => {
-      console.log('promise:', message);
-    });
-
-    const bodyClick$ = fromEvent(document, 'click');
-    bodyClick$.subscribe((event) => {
-      if (event instanceof PointerEvent) {
-        console.log('eixo X:', event.x, 'eixo Y:', event.y);
-        console.log(event.pointerType);
-      }
+    message$.subscribe({
+      next: (message) => {
+        console.log('promise:', message);
+      },
+      error: (error) => {
+        console.log('ERRO', error);
+      },
+      complete: () => {
+        console.log('finalizado');
+      },
     });
   }
 }
