@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { firstValueFrom, from, fromEvent, of } from 'rxjs';
+import { firstValueFrom, from, fromEvent, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,23 +13,21 @@ export class App {
   data = signal<number>(0);
 
   constructor() {
-    const messagePromise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        reject('msg de ERRO');
-      }, 1000);
+    const users$ = new Observable((observer) => {
+      observer.next(1);
+      observer.next(1);
+      observer.next(2);
+      observer.next(3);
+      observer.complete();
+      observer.next(4);
     });
 
-    const message$ = from(messagePromise);
-
-    message$.subscribe({
-      next: (message) => {
-        console.log('promise:', message);
-      },
-      error: (error) => {
-        console.log('ERRO', error);
+    users$.subscribe({
+      next: (users) => {
+        console.log(users);
       },
       complete: () => {
-        console.log('finalizado');
+        console.log('end of stream');
       },
     });
   }
