@@ -19,7 +19,9 @@ export class App {
     ];
 
     const users$ = new Observable((observer) => {
-      observer.next(users);
+      users.forEach((user) => {
+        observer.next(user);
+      });
     });
 
     users$.subscribe({
