@@ -1,20 +1,17 @@
 import { Component } from '@angular/core';
-import { interval } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ajax } from 'rxjs/ajax';
+import { Curso } from '../types';
 
 @Component({
   selector: 'app-root',
-  imports: [AsyncPipe, RouterLink],
+  imports: [RouterLink],
   templateUrl: './counter.html',
 })
 export class Counter {
-  interval$ = interval(1000).pipe(takeUntilDestroyed());
+  enderecoAPI = 'https://696cf048f4a79b31518025cf.mockapi.io/api/cursos';
 
   constructor() {
-    this.interval$.subscribe((i) => {
-      console.log(i);
-    });
+    ajax<Curso[]>(this.enderecoAPI).subscribe((result) => console.log(result.response));
   }
 }
