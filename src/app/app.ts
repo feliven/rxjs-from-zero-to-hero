@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { firstValueFrom, from, fromEvent, Observable, of } from 'rxjs';
+import { firstValueFrom, from, fromEvent, map, Observable, of } from 'rxjs';
 import { CustomObserver } from './custom-observer';
 
 @Component({
@@ -19,18 +19,40 @@ export class App {
   });
 
   constructor() {
-    console.log(1);
+    const users = [
+      { id: '1', name: 'John', age: 30 },
+      { id: '2', name: 'Mary', age: 40 },
+      { id: '3', name: 'Igor', age: 20 },
+    ];
 
-    this.promessa.then((resposta) => console.log(resposta));
+    const users$ = of(users);
 
-    console.log(2);
+    const usernames$ = users$.pipe(
+      map((users) => {
+        return users.map((user) => user.name);
+      }),
+    );
 
-    console.log('a');
+    usernames$.subscribe((names) => console.log('usernames$:', names));
 
-    const numbers$ = from([1, 2, 3, 4, 5]);
+    users$.subscribe((users) => {
+      const names1 = users.map((user) => user.name);
 
-    numbers$.subscribe(new CustomObserver());
+      console.log('names1:', names1);
 
-    console.log('b');
+      const names2 = users.map((user) => {
+        return user.name;
+      });
+
+      console.log('names2:', names2);
+
+      // users.map((user) => { user.name; }) uses a block body without a return statement. The expression user.name; evaluates but isn't returned, so each map iteration yields undefined, resulting in [undefined, undefined, undefined].
+
+      const names3 = users.map((user) => {
+        user.name;
+      });
+
+      console.log('names3:', names3);
+    });
   }
 }
