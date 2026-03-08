@@ -1,0 +1,9 @@
+<h3>
+  <a routerLink="/home">Home</a>
+</h3>
+
+<h1>RxJS</h1>
+
+@for (curso of cursos$ | async; track $index) {
+  <p>{{ curso.nome_curso }} -- {{ curso.categoria }}</p>
+}
