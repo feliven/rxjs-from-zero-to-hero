@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { filter, firstValueFrom, from, fromEvent, map, Observable, of } from 'rxjs';
-import { CustomObserver } from './custom-observer';
+import { catchError, filter, firstValueFrom, from, fromEvent, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AsyncPipe } from '@angular/common';
 
@@ -22,7 +21,7 @@ type Curso = {
 export class App {
   protected readonly title = signal('rxjs-udemy');
 
-  enderecoAPI = 'https://696cf048f4a79b31518025cf.mockapi.io/api/cursos';
+  enderecoAPI = 'https://696cf048f4a79b31518025cf.mockapi.io/api/curso';
 
   private http = inject(HttpClient);
 
@@ -37,14 +36,24 @@ export class App {
           data_criacao: new Date(curso.data_criacao),
         })),
       ),
+      catchError((error) => {
+        console.log(error);
+        return of([]);
+      }),
     );
 
-    resultadoAPI$.subscribe((cursos) => {
-      console.log(cursos[0]);
-      cursos.forEach((curso) => {
-        console.log(curso.id);
-        console.log(curso.data_criacao.toLocaleDateString());
-      });
+    resultadoAPI$.subscribe({
+      next: (cursos) => {
+        console.log(cursos[0]);
+        cursos.forEach((curso) => {
+          console.log(curso.id);
+          console.log(curso.data_criacao.toLocaleDateString());
+        });
+      },
+
+      error: (error) => {
+        console.log(error);
+      },
     });
   }
 }
