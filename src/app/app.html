@@ -1,3 +1,7 @@
 <h1>RxJS</h1>
 
+@for (curso of cursos$ | async; track $index) {
+  <p>{{ curso.nome_curso }} -- {{ curso.categoria }}</p>
+}
+
 <router-outlet />

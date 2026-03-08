@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { filter, firstValueFrom, from, fromEvent, map, Observable, of } from 'rxjs';
 import { CustomObserver } from './custom-observer';
 import { HttpClient } from '@angular/common/http';
+import { AsyncPipe } from '@angular/common';
 
 type Curso = {
   data_criacao: Date;
@@ -14,21 +15,21 @@ type Curso = {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, AsyncPipe],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('rxjs-udemy');
 
-  timeout = parseInt((Math.random() * 2000).toPrecision());
-
   enderecoAPI = 'https://696cf048f4a79b31518025cf.mockapi.io/api/cursos';
 
   private http = inject(HttpClient);
 
+  cursos$ = this.http.get<Curso[]>(this.enderecoAPI);
+
   constructor() {
-    const resultadoAPI$ = this.http.get<Curso[]>(this.enderecoAPI).pipe(
+    const resultadoAPI$ = this.cursos$.pipe(
       map((cursos) =>
         cursos.map((curso) => ({
           ...curso,
