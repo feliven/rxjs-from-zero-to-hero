@@ -19,34 +19,31 @@ type User = {
 export class App {
   protected readonly title = signal('rxjs-udemy');
 
+  timeout = parseInt((Math.random() * 2000).toPrecision());
+
   constructor() {
-    const users$: Observable<User[] | null> = new Observable((observer) => {
-      observer.next(null);
+    console.log('timeout:', this.timeout);
+
+    const users$: Observable<User[]> = new Observable((observer) => {
+      // observer.next(null);
       setTimeout(() => {
         observer.next([
           { id: '1', name: 'John', age: 30, isActive: true },
           { id: '2', name: 'Mary', age: 40, isActive: true },
           { id: '3', name: 'Igor', age: 20, isActive: true },
         ]);
-      }, 1000);
+      }, this.timeout);
     });
 
-    const filteredUsers$ = users$.pipe(
-      filter((users) => {
-        return users !== null;
+    const filteredUsernames$ = users$.pipe(
+      filter((users) => users?.every((user) => user.isActive)),
+      map((users) => {
+        return users.map((user) => user.name);
       }),
     );
 
-    filteredUsers$.subscribe((users) => {
-      console.log('filteredUsers$:', users);
+    filteredUsernames$.subscribe((usernames) => {
+      console.log('filteredUsernames$:', usernames);
     });
-
-    // users$.subscribe((users) => {
-    //   if (users === null) {
-    //     return;
-    //   }
-
-    //   console.log(users);
-    // });
   }
 }
