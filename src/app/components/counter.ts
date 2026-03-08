@@ -1,5 +1,5 @@
 import { Component, OnDestroy, signal } from '@angular/core';
-import { interval, Subscription, take } from 'rxjs';
+import { interval, Subscription, take, takeWhile } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -13,7 +13,7 @@ export class Counter {
   intervalSubscription = signal<Subscription>(new Subscription());
 
   constructor() {
-    this.interval$.pipe(take(1)).subscribe((i) => {
+    this.interval$.pipe(takeWhile((i) => i < 5)).subscribe((i) => {
       console.log(i);
     });
   }
