@@ -1,5 +1,5 @@
 import { Component, OnDestroy, signal } from '@angular/core';
-import { interval, Subscription, take, takeWhile } from 'rxjs';
+import { interval, Subject, Subscription, take, takeUntil, takeWhile } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -8,13 +8,18 @@ import { RouterLink } from '@angular/router';
   imports: [AsyncPipe, RouterLink],
   templateUrl: './counter.html',
 })
-export class Counter {
+export class Counter implements OnDestroy {
   interval$ = interval(1000);
-  intervalSubscription = signal<Subscription>(new Subscription());
+  unsubscribe$ = new Subject<void>();
 
   constructor() {
-    this.interval$.pipe(takeWhile((i) => i < 5)).subscribe((i) => {
+    this.interval$.pipe(takeUntil(this.unsubscribe$)).subscribe((i) => {
       console.log(i);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
