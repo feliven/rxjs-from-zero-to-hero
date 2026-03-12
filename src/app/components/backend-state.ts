@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 
 interface IBackendState {
   api_url: string;
@@ -38,18 +38,35 @@ export class BackendState {
   state: State | undefined;
 
   constructor() {
-    this.backendState$.subscribe((backendState) => {
-      if (!backendState) {
-        return;
-      }
+    const backendStateExistente$ = this.backendState$.pipe(
+      filter((backendState) => {
+        return !!backendState;
+      }),
+    );
 
-      this.state = {
-        apiUrl: backendState.api_url,
-        realViews: backendState.real_views,
-        roles: backendState.roles,
-      };
+    const backendStateSalvo$ = backendStateExistente$.pipe(
+      map((backendState) => {
+        return backendState;
+      }),
+    );
 
-      console.log(this.state);
+    backendStateSalvo$.subscribe((backendState) => {
+      console.log('backendState:', backendState);
     });
+
+    // alternativa mais enxuta:
+
+    const novoBackendStateSalvo$ = this.backendState$
+      .pipe(
+        filter((backendState) => {
+          return !!backendState;
+        }),
+        map((backendState) => {
+          return backendState;
+        }),
+      )
+      .subscribe((backendState) => {
+        console.log('novoBackendState:', backendState);
+      });
   }
 }
