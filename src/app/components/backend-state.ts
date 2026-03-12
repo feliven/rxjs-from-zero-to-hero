@@ -35,38 +35,21 @@ export class BackendState {
     }, 2000);
   });
 
-  state: State | undefined;
+  state$: Observable<State> = this.backendState$.pipe(
+    filter(Boolean),
+    // the Boolean constructor can be used as a function that returns the truthiness of its argument
+    map((backendState) => {
+      return {
+        apiUrl: backendState.api_url,
+        realViews: backendState.real_views,
+        roles: backendState.roles,
+      };
+    }),
+  );
 
   constructor() {
-    const backendStateExistente$ = this.backendState$.pipe(
-      filter((backendState) => {
-        return !!backendState;
-      }),
-    );
-
-    const backendStateSalvo$ = backendStateExistente$.pipe(
-      map((backendState) => {
-        return backendState;
-      }),
-    );
-
-    backendStateSalvo$.subscribe((backendState) => {
-      console.log('backendState:', backendState);
+    this.state$.subscribe((backendState) => {
+      console.log('state$:', backendState);
     });
-
-    // alternativa mais enxuta:
-
-    const novoBackendStateSalvo$ = this.backendState$
-      .pipe(
-        filter((backendState) => {
-          return !!backendState;
-        }),
-        map((backendState) => {
-          return backendState;
-        }),
-      )
-      .subscribe((backendState) => {
-        console.log('novoBackendState:', backendState);
-      });
   }
 }
