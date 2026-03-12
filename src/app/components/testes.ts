@@ -1,47 +1,35 @@
-import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Observable, combineLatest, of, from } from 'rxjs';
+import { Curso, User, UserData } from '../types';
+import { HttpClient } from '@angular/common/http';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
-  imports: [RouterLink, AsyncPipe],
+  imports: [RouterLink],
   templateUrl: './testes.html',
 })
 export class Testes {
-  users = [
-    { id: '1', name: 'John', age: 30 },
-    { id: '2', name: 'Mary', age: 40 },
-    { id: '3', name: 'Igor', age: 20 },
-  ];
+  private http = inject(HttpClient);
 
-  messagePromise = new Promise((resolve) => {
-    setTimeout(() => {
-      resolve('Promise resolved');
-    }, 2000);
-  });
+  enderecoAPICursos = 'https://696cf048f4a79b31518025cf.mockapi.io/api/cursos';
+  enderecoAPIUsers =
+    'https://api.mockapi.com/api/v1/users?api_key=1f7fa9975ecf444e8d5b1dfba072c210';
 
-  boa$ = new Observable((observer) => {
-    observer.next('boa');
-
-    setTimeout(function () {
-      observer.next('boa tarde');
-    }, 1000);
-
-    setTimeout(() => {
-      observer.next('boa noite');
-    }, 3000);
-  });
-
-  data$ = combineLatest({
-    users: of(this.users),
-    promise: from(this.messagePromise),
-    boa: this.boa$,
-  });
+  cursos$ = this.http.get<Curso[]>(this.enderecoAPICursos);
+  users$ = this.http.get<UserData>(this.enderecoAPIUsers).pipe(
+    map((userdata) => {
+      return userdata.data;
+    }),
+  );
 
   constructor() {
-    this.data$.subscribe((data) => {
-      console.log(data);
+    forkJoin({
+      cursos: this.cursos$,
+      users: this.users$,
+    }).subscribe((res) => {
+      console.log(res.cursos);
+      console.log(res.users);
     });
   }
 }
