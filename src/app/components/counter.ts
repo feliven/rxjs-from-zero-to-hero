@@ -4,7 +4,7 @@ import { ajax } from 'rxjs/ajax';
 import { Curso } from '../types';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-counter',
   imports: [RouterLink],
   templateUrl: './counter.html',
 })

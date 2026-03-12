@@ -6,7 +6,7 @@ import { catchError, map, of } from 'rxjs';
 import { Curso } from '../types';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-cursos',
   imports: [AsyncPipe, RouterLink],
   templateUrl: './cursos.html',
 })
