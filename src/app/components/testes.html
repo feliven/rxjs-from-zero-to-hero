@@ -1,0 +1,11 @@
+<h3>
+  <a routerLink="/home">Home</a>
+</h3>
+
+@if (data$ | async; as data) {
+  @for (user of data.users; track $index) {
+    <p>{{ user.name }}, {{ user.age }}</p>
+  }
+  <p>{{ data.promise }}</p>
+  <p>{{ data.boa }}</p>
+}
