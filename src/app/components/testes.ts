@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Curso, User, UserData } from '../types';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin, map } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { forkJoin, map, Observable, withLatestFrom } from 'rxjs';
+import { Curso, User, UserData } from '../types';
 
 @Component({
   selector: 'app-testes',
@@ -23,13 +23,16 @@ export class Testes {
     }),
   );
 
+  customValue$ = new Observable((observer) => {
+    observer.next('valor inicial');
+    setTimeout(() => {
+      observer.next('último valor');
+    }, 4000);
+  });
+
   constructor() {
-    forkJoin({
-      cursos: this.cursos$,
-      users: this.users$,
-    }).subscribe((res) => {
-      console.log(res.cursos);
-      console.log(res.users);
+    this.users$.pipe(withLatestFrom(this.customValue$)).subscribe((res) => {
+      console.log(res);
     });
   }
 }
