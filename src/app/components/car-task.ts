@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { from } from 'rxjs';
+import { distinctUntilChanged, filter, from, map, toArray } from 'rxjs';
 
 @Component({
   selector: 'app-car-task',
@@ -9,15 +9,40 @@ import { from } from 'rxjs';
 })
 export class CarTask {
   cars = [
-    { id: '', name: 'Shadow', color: 'black' },
-    { id: '', name: 'Midnight', color: 'black' },
-    { id: '', name: 'Ruby', color: 'red' },
-    { id: '', name: 'Snowball', color: 'white' },
+    { id: '1', name: 'Shadow', color: 'black' },
+    { id: '2', name: 'Midnight', color: 'black' },
+    { id: '3', name: 'Ruby', color: 'red' },
+    { id: '4', name: 'Snowball', color: 'white' },
   ];
 
   cars$ = from(this.cars);
 
-  // 1. only emit cars with black or red color
-  // 2. only get the colors
-  // 3. only emit new value if different from previous one
+  constructor() {
+    // 1. only emit cars with black or red color
+
+    const blackOrRedCars$ = this.cars$.pipe(
+      filter((car) => car.color === 'black' || car.color === 'red'),
+      toArray(),
+    );
+
+    blackOrRedCars$.subscribe((cars) => console.log('blackOrRedCars:', cars));
+
+    // 2. only get the colors
+
+    const carColors$ = this.cars$.pipe(
+      map((car) => car.color),
+      toArray(),
+    );
+
+    carColors$.subscribe((colors) => console.log('carColors:', colors));
+
+    // 3. only emit new value if different from previous one
+
+    const distinctCars$ = this.cars$.pipe(
+      distinctUntilChanged((prev, curr) => prev.name === curr.name || prev.color === curr.color),
+      toArray(),
+    );
+
+    distinctCars$.subscribe((cars) => console.log('distinctCars:', cars));
+  }
 }
