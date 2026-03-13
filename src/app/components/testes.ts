@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { distinct, from } from 'rxjs';
+import { distinct, distinctUntilKeyChanged, from } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
@@ -15,7 +15,7 @@ export class Testes {
     { id: '4', name: 'Mary', age: 50 },
   ];
 
-  users$ = from(this.users).pipe(distinct((user) => user.name));
+  users$ = from(this.users).pipe(distinctUntilKeyChanged('name'));
 
   constructor() {
     this.users$.subscribe((res) => {
