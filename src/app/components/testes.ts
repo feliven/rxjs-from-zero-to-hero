@@ -1,32 +1,22 @@
-import { Component, inject } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { debounce, debounceTime, interval, throttle, throttleTime, timer } from 'rxjs';
+import { debounceTime, filter, interval, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, AsyncPipe],
   templateUrl: './testes.html',
 })
 export class Testes {
-  formBuilder = inject(NonNullableFormBuilder);
-  buscaForm = this.formBuilder.group({
-    termoBusca: '',
-  });
-
-  constructor() {
-    const termoBusca$ = this.buscaForm.get('termoBusca')?.valueChanges;
-
-    termoBusca$?.pipe(throttleTime(500)).subscribe((termo) => console.log(termo));
-
-    interval(1000)
-      .pipe(throttle((value) => timer(value * 200)))
-      .subscribe((value) => {
-        console.log('valor:', value, 'tempo de throttle:', value * 200, 'ms');
-      });
-  }
-
-  onBuscaSubmit() {
-    console.log('submit');
-  }
+  interval$ = interval(1000).pipe(
+    filter((valor) => {
+      return valor % 2 === 0;
+    }),
+    tap((valor) => console.log('após filter:', valor)),
+    debounceTime(1000),
+    tap((valor) => console.log('após debounceTime:', valor)),
+    map((valor) => valor + ' é um número par'),
+    tap((valor) => console.log('após map:', valor)),
+  );
 }

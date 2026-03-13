@@ -2,7 +2,6 @@
   <a routerLink="/home">Home</a>
 </h3>
 
-<form [formGroup]="buscaForm" (ngSubmit)="onBuscaSubmit()">
-  <input type="search" id="termoBusca" formControlName="termoBusca" />
-  <button type="submit">Enviar</button>
-</form>
+<p>
+  {{ interval$ | async }}
+</p>
