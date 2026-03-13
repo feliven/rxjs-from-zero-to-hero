@@ -1,8 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { forkJoin, map, Observable, withLatestFrom } from 'rxjs';
-import { Curso, User, UserData } from '../types';
+import { distinct, from } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
@@ -10,28 +8,17 @@ import { Curso, User, UserData } from '../types';
   templateUrl: './testes.html',
 })
 export class Testes {
-  private http = inject(HttpClient);
+  users = [
+    { id: '1', name: 'John', age: 30 },
+    { id: '2', name: 'Mary', age: 40 },
+    { id: '3', name: 'Igor', age: 20 },
+    { id: '4', name: 'Mary', age: 50 },
+  ];
 
-  enderecoAPICursos = 'https://696cf048f4a79b31518025cf.mockapi.io/api/cursos';
-  enderecoAPIUsers =
-    'https://api.mockapi.com/api/v1/users?api_key=1f7fa9975ecf444e8d5b1dfba072c210';
-
-  cursos$ = this.http.get<Curso[]>(this.enderecoAPICursos);
-  users$ = this.http.get<UserData>(this.enderecoAPIUsers).pipe(
-    map((userdata) => {
-      return userdata.data;
-    }),
-  );
-
-  customValue$ = new Observable((observer) => {
-    observer.next('valor inicial');
-    setTimeout(() => {
-      observer.next('último valor');
-    }, 4000);
-  });
+  users$ = from(this.users).pipe(distinct((user) => user.name));
 
   constructor() {
-    this.users$.pipe(withLatestFrom(this.customValue$)).subscribe((res) => {
+    this.users$.subscribe((res) => {
       console.log(res);
     });
   }
