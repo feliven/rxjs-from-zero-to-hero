@@ -5,6 +5,7 @@ import { Cursos } from './components/cursos';
 import { Counter } from './components/counter';
 import { Testes } from './components/testes';
 import { BackendState } from './components/backend-state';
+import { CarTask } from './components/car-task';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'counter', component: Counter },
   { path: 'testes', component: Testes },
   { path: 'backendstate', component: BackendState },
+  { path: 'cartask', component: CarTask },
 ];
