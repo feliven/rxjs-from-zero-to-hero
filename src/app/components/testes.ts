@@ -1,35 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { distinctUntilChanged, from } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
-  imports: [RouterLink],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './testes.html',
 })
 export class Testes {
-  users = [
-    { id: '1', name: 'John', age: 30 },
-    { id: '1', name: 'John', age: 30 },
-    { id: '2', name: 'Mary', age: 40 },
-    { id: '3', name: 'Igor', age: 20 },
-    { id: '3', name: 'Igor', age: 20 },
-    { id: '4', name: 'Eve', age: 50 },
-    { id: '3', name: 'Igor', age: 20 },
-  ];
-
-  users$ = from(this.users).pipe(
-    distinctUntilChanged(
-      (previousName, currentName) => previousName === currentName,
-      (user) => user.name,
-    ),
-  );
+  formBuilder = inject(NonNullableFormBuilder);
+  buscaForm = this.formBuilder.group({
+    termoBusca: '',
+  });
 
   constructor() {
-    this.users$.subscribe((res) => {
-      console.log(res);
-    });
+    const termoBusca$ = this.buscaForm.get('termoBusca')?.valueChanges;
 
-    console.log(this.users[0] == this.users[1]);
+    termoBusca$?.pipe(debounceTime(500)).subscribe((termo) => console.log(termo));
+  }
+
+  onBuscaSubmit() {
+    console.log('submit');
   }
 }
