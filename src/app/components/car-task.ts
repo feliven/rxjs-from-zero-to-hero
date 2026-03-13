@@ -44,5 +44,14 @@ export class CarTask {
     );
 
     distinctCars$.subscribe((cars) => console.log('distinctCars:', cars));
+
+    const filteredCarColors$ = this.cars$.pipe(
+      filter((car) => car.color === 'black' || car.color === 'red'),
+      map((car) => car.color),
+      distinctUntilChanged(),
+      toArray(),
+    );
+
+    filteredCarColors$.subscribe((colors) => console.log('filteredCarColors:', colors));
   }
 }
