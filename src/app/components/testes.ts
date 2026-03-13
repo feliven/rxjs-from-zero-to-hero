@@ -19,7 +19,10 @@ export class Testes {
   ];
 
   users$ = from(this.users).pipe(
-    distinctUntilChanged((previous, current) => previous.name === current.name),
+    distinctUntilChanged(
+      (previousName, currentName) => previousName === currentName,
+      (user) => user.name,
+    ),
   );
 
   constructor() {
