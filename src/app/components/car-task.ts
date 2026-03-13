@@ -1,10 +1,11 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { distinctUntilChanged, filter, from, map, toArray } from 'rxjs';
 
 @Component({
   selector: 'app-car-task',
-  imports: [RouterLink],
+  imports: [RouterLink, AsyncPipe],
   templateUrl: './car-task.html',
 })
 export class CarTask {
@@ -17,41 +18,31 @@ export class CarTask {
 
   cars$ = from(this.cars);
 
-  constructor() {
-    // 1. only emit cars with black or red color
+  // 1. only emit cars with black or red color
 
-    const blackOrRedCars$ = this.cars$.pipe(
-      filter((car) => car.color === 'black' || car.color === 'red'),
-      toArray(),
-    );
+  blackOrRedCars$ = this.cars$.pipe(
+    filter((car) => car.color === 'black' || car.color === 'red'),
+    toArray(),
+  );
 
-    blackOrRedCars$.subscribe((cars) => console.log('blackOrRedCars:', cars));
+  // 2. only get the colors
 
-    // 2. only get the colors
+  carColors$ = this.cars$.pipe(
+    map((car) => car.color),
+    toArray(),
+  );
 
-    const carColors$ = this.cars$.pipe(
-      map((car) => car.color),
-      toArray(),
-    );
+  // 3. only emit new value if different from previous one
 
-    carColors$.subscribe((colors) => console.log('carColors:', colors));
+  distinctCars$ = this.cars$.pipe(
+    distinctUntilChanged((prev, curr) => prev.name === curr.name || prev.color === curr.color),
+    toArray(),
+  );
 
-    // 3. only emit new value if different from previous one
-
-    const distinctCars$ = this.cars$.pipe(
-      distinctUntilChanged((prev, curr) => prev.name === curr.name || prev.color === curr.color),
-      toArray(),
-    );
-
-    distinctCars$.subscribe((cars) => console.log('distinctCars:', cars));
-
-    const filteredCarColors$ = this.cars$.pipe(
-      filter((car) => car.color === 'black' || car.color === 'red'),
-      map((car) => car.color),
-      distinctUntilChanged(),
-      toArray(),
-    );
-
-    filteredCarColors$.subscribe((colors) => console.log('filteredCarColors:', colors));
-  }
+  filteredCarColors$ = this.cars$.pipe(
+    filter((car) => car.color === 'black' || car.color === 'red'),
+    map((car) => car.color),
+    distinctUntilChanged(),
+    toArray(),
+  );
 }

@@ -1,3 +1,23 @@
 <h3>
   <a routerLink="/home">Home</a>
 </h3>
+
+<strong>blackOrRedCars:</strong>
+@for (car of blackOrRedCars$ | async; track $index) {
+  <p>{{ car.id }}, {{ car.name }}, {{ car.color }}</p>
+}
+
+<strong>carColors:</strong>
+@for (color of carColors$ | async; track $index) {
+  <p>{{ color }}</p>
+}
+
+<strong>distinctCars:</strong>
+@for (car of distinctCars$ | async; track $index) {
+  <p>{{ car.id }}, {{ car.name }}, {{ car.color }}</p>
+}
+
+<strong>filteredCarColors:</strong>
+@for (color of filteredCarColors$ | async; track $index) {
+  <p>{{ color }}</p>
+}
