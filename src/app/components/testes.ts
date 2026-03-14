@@ -1,22 +1,27 @@
-import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { debounceTime, filter, interval, map, tap } from 'rxjs';
+import { Subject } from 'rxjs';
+import { User } from '../types';
 
 @Component({
   selector: 'app-testes',
-  imports: [RouterLink, AsyncPipe],
+  imports: [RouterLink],
   templateUrl: './testes.html',
 })
 export class Testes {
-  interval$ = interval(1000).pipe(
-    filter((valor) => {
-      return valor % 2 === 0;
-    }),
-    tap((valor) => console.log('após filter:', valor)),
-    debounceTime(1000),
-    tap((valor) => console.log('após debounceTime:', valor)),
-    map((valor) => valor + ' é um número par'),
-    tap((valor) => console.log('após map:', valor)),
-  );
+  subject$ = new Subject<User>();
+
+  constructor() {
+    this.subject$.subscribe((user) => console.log(user));
+
+    this.subject$.next({ Id: '1', FirstName: 'Hello' });
+
+    setTimeout(() => {
+      this.subject$.next({ Id: '2', FirstName: 'World' });
+    }, 1000);
+
+    const user$ = this.subject$.asObservable();
+
+    user$.subscribe((user) => console.log(user));
+  }
 }

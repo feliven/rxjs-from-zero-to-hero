@@ -13,13 +13,13 @@ export type UserData = {
 export type User = {
   Id: string;
   FirstName: string;
-  LastName: string;
-  DateOfBirth: string;
-  Address: {
-    HouseNumber: number;
-    Street: string;
-    State: string;
-    ZipCode: string;
-    Country: string;
+  LastName?: string;
+  DateOfBirth?: string;
+  Address?: {
+    HouseNumber?: number;
+    Street?: string;
+    State?: string;
+    ZipCode?: string;
+    Country?: string;
   };
 };
