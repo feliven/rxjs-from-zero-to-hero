@@ -8,6 +8,7 @@ import { BackendState } from './components/backend-state';
 import { CarTask } from './components/car-task';
 import { FormBusca } from './components/form-busca';
 import { TesteTap } from './components/teste-tap';
+import { Todo } from './components/todo';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -19,4 +20,5 @@ export const routes: Routes = [
   { path: 'cartask', component: CarTask },
   { path: 'form-busca', component: FormBusca },
   { path: 'teste-tap', component: TesteTap },
+  { path: 'todo', component: Todo },
 ];
