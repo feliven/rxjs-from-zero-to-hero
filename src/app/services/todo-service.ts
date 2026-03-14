@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, from, of } from 'rxjs';
 
 export interface ITodo {
   id: number;
@@ -17,6 +17,19 @@ export class TodoService {
     { id: 3, text: 'weqqwe', isComplete: false },
     { id: 4, text: 'vcnvncm', isComplete: false },
   ];
+
+  respostaAPI$ = of(this.todoList);
+  todoListBehaviorSubject$!: BehaviorSubject<ITodo[]>;
+
+  todoListSubscription = this.respostaAPI$.subscribe(
+    (resposta) => (this.todoListBehaviorSubject$ = new BehaviorSubject<ITodo[]>(resposta)),
+  ); // The BehaviorSubject remains open because the complete notification from respostaAPI$ is ignored.
+
+  // todoListSubscription2 = this.respostaAPI$.subscribe(this.todoListBehaviorSubject$);
+  //
+  // Since a Subject is also an Observer, you can pass it directly to the subscribe method. When respostaAPI$ emits the data, the BehaviorSubject receives that value and broadcasts it to all of its own subscribers.
+  //
+  // Side effect: Since of() completes immediately after emitting, the BehaviorSubject will also be marked as completed. Once completed, a Subject will no longer emit new values if you try to call .next() on it later.
 
   // Store here the state for the list of the todos
   todoListSubject$ = new BehaviorSubject<ITodo[]>(this.todoList);

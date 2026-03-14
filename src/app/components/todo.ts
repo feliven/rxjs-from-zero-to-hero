@@ -25,5 +25,7 @@ export class Todo {
 
     this.todoService.toggleTodo(3);
     this.toggle.set(this.todoService.todoListSubject$.getValue());
+
+    console.log('todoListBehaviorSubject$', this.todoService.todoListBehaviorSubject$.getValue());
   }
 }
