@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { delay, from, map, mergeMap, Observable, of } from 'rxjs';
+import { concatMap, delay, from, map, mergeMap, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-map-operators',
@@ -9,27 +9,27 @@ import { delay, from, map, mergeMap, Observable, of } from 'rxjs';
 })
 export class MapOperators {
   constructor() {
-    const innerAndOuterObservable$ = from([1, 2, 3, 4, 5]).pipe(
-      mergeMap((value) => of(value).pipe(delay(value * 1000))),
-    );
+    // const innerAndOuterObservable$ = from([1, 2, 3, 4, 5]).pipe(
+    //   mergeMap((value) => of(value).pipe(delay(value * 1000))),
+    // );
 
-    innerAndOuterObservable$.subscribe({
-      next: console.log,
-      error: () => {},
-      complete: () => {
-        console.log(`mergeMap complete`);
-      },
-    });
+    // innerAndOuterObservable$.subscribe({
+    //   next: console.log,
+    //   error: () => {},
+    //   complete: () => {
+    //     console.log(`mergeMap complete`);
+    //   },
+    // });
 
-    // from([1, 2, 3, 4, 5])
-    //   .pipe(mergeMap((x: any) => of(x).pipe(delay(500))))
-    //   .subscribe({
-    //     next: console.log,
-    //     error: () => {},
-    //     complete: () => {
-    //       console.log(`${mergeMap.name} completed`);
-    //     },
-    //   });
+    from([1, 2, 3, 4, 5])
+      .pipe(concatMap((x: any) => of(x).pipe(delay(1000))))
+      .subscribe({
+        next: console.log,
+        error: () => {},
+        complete: () => {
+          console.log(`concatMap completed`);
+        },
+      });
 
     // const example = (operator: any) => () => {
     //   from([1, 2, 3, 4, 5])
