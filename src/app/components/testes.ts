@@ -1,8 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { User } from '../types';
-import { UserService } from '../services/user-service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
@@ -10,23 +8,18 @@ import { UserService } from '../services/user-service';
   templateUrl: './testes.html',
 })
 export class Testes {
-  userService = inject(UserService);
-
   constructor() {
-    this.userService.subject$.subscribe((user) => console.log(user));
+    const subject$ = new Subject();
+    subject$.next('message 1');
 
-    this.userService.subject$.next({ Id: '1', FirstName: 'Hello' });
-
-    const valor1 = this.userService.subject$.getValue();
-
-    console.log('valor1', valor1);
+    subject$.subscribe((data) => console.log('observer 1:', data));
 
     setTimeout(() => {
-      this.userService.subject$.next({ Id: '2', FirstName: 'World' });
-    }, 1000);
+      subject$.next('message 2');
+      subject$.next('message 3');
+      subject$.next('message 4');
 
-    // const user$ = this.subject$.asObservable();
-
-    // user$.subscribe((user) => console.log(user));
+      subject$.subscribe((data) => console.log('observer 2:', data));
+    }, 3000);
   }
 }
