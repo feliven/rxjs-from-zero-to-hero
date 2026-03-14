@@ -18,36 +18,26 @@ export class TodoService {
     { id: 4, text: 'vcnvncm', isComplete: false },
   ];
 
-  respostaAPI$ = of(this.todoList);
-  todoListBehaviorSubject$!: BehaviorSubject<ITodo[]>;
-
-  todoListSubscription = this.respostaAPI$.subscribe(
-    (resposta) => (this.todoListBehaviorSubject$ = new BehaviorSubject<ITodo[]>(resposta)),
-  ); // The BehaviorSubject remains open because the complete notification from respostaAPI$ is ignored.
-
-  // todoListSubscription2 = this.respostaAPI$.subscribe(this.todoListBehaviorSubject$);
-  //
-  // Since a Subject is also an Observer, you can pass it directly to the subscribe method. When respostaAPI$ emits the data, the BehaviorSubject receives that value and broadcasts it to all of its own subscribers.
-  //
-  // Side effect: Since of() completes immediately after emitting, the BehaviorSubject will also be marked as completed. Once completed, a Subject will no longer emit new values if you try to call .next() on it later.
-
   // Store here the state for the list of the todos
   todoListSubject$ = new BehaviorSubject<ITodo[]>(this.todoList);
 
   // Create several methods like add todo, remove todo and toggle todo, which essentially means one method must add todos to the array to your stream.
 
-  addTodo(todo: ITodo) {
+  addTodo(text: string) {
     const todoList = this.todoListSubject$.getValue();
-    const listWithNewTodo = [...todoList, todo];
+    const idList = todoList.map((todo) => {
+      return todo.id;
+    });
+    const newId = Math.max(...idList) + 1;
+
+    const newTodo: ITodo = {
+      id: newId,
+      text: text,
+      isComplete: false,
+    };
+
+    const listWithNewTodo = [...todoList, newTodo];
     this.todoListSubject$.next(listWithNewTodo);
-
-    // To update the list correctly following functional programming patterns, we need to create a new array containing the existing items plus the new one.
-
-    //
-    // const thisIsANumber = todoList.push(todo);
-    //
-    // In JavaScript and TypeScript, the Array.prototype.push() method returns the new length of the array.
-    // This is commented because it changes the existing todoList for everyone.
   }
 
   removeTodo(id: number) {
@@ -61,27 +51,6 @@ export class TodoService {
     const listAfterToggle = todoList.map((todo) =>
       todo.id === id ? { ...todo, isComplete: !todo.isComplete } : todo,
     );
-
-    // map creates a new array, and { ...todo } creates a new object for the toggled item.
-    // When you push this new array to todoListSubject$, subscribers receive a unique reference, making state changes explicit and easy to track.
-
     this.todoListSubject$.next(listAfterToggle);
   }
-
-  toggleTodoErrado(id: number) {
-    const todoList = this.todoListSubject$.getValue();
-    const todoIndex = todoList.findIndex((todo) => todo.id === id);
-
-    console.log('todoIndex:', todoIndex);
-    const completeStatus = todoList[todoIndex].isComplete;
-
-    console.log('completeStatus:', completeStatus);
-    todoList[todoIndex].isComplete = !completeStatus;
-
-    // This changes the property of the existing object already stored in memory. Since your component's signals (listaTarefas, adicionar, etc.) all hold references to the same objects, modifying one object updates it everywhere simultaneously.
-
-    this.todoListSubject$.next(todoList);
-  }
-
-  // Second, remove this data and one which will toggle on the specific todo by id here is completed property.
 }

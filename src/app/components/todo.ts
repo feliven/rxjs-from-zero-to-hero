@@ -17,7 +17,7 @@ export class Todo {
   constructor() {
     this.listaTarefas.set(this.todoService.todoListSubject$.getValue());
 
-    this.todoService.addTodo({ id: 5, text: 'teste', isComplete: true });
+    this.todoService.addTodo('teste');
     this.adicionar.set(this.todoService.todoListSubject$.getValue());
 
     this.todoService.removeTodo(2);
@@ -25,7 +25,5 @@ export class Todo {
 
     this.todoService.toggleTodo(3);
     this.toggle.set(this.todoService.todoListSubject$.getValue());
-
-    console.log('todoListBehaviorSubject$', this.todoService.todoListBehaviorSubject$.getValue());
   }
 }
