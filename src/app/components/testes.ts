@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Subject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-testes',
@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 })
 export class Testes {
   constructor() {
-    const subject$ = new Subject();
+    const subject$ = new ReplaySubject();
     subject$.next('message 1');
 
     subject$.subscribe((data) => console.log('observer 1:', data));
