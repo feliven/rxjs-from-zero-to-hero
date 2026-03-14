@@ -10,24 +10,26 @@ import { delay, from, map, mergeMap, Observable, of } from 'rxjs';
 export class MapOperators {
   constructor() {
     const innerAndOuterObservable$ = from([1, 2, 3, 4, 5]).pipe(
-      map((value) => of(value).pipe(delay(value * 1000))),
+      mergeMap((value) => of(value).pipe(delay(value * 1000))),
     );
 
     innerAndOuterObservable$.subscribe({
-      next: (innerObservable$) => {
-        innerObservable$.subscribe({
-          next: console.log,
-          error: () => {},
-          complete: () => {
-            console.log(`Inner observable complete`);
-          },
-        });
-      },
+      next: console.log,
       error: () => {},
       complete: () => {
-        console.log(`Outer observable complete`);
+        console.log(`mergeMap complete`);
       },
     });
+
+    // from([1, 2, 3, 4, 5])
+    //   .pipe(mergeMap((x: any) => of(x).pipe(delay(500))))
+    //   .subscribe({
+    //     next: console.log,
+    //     error: () => {},
+    //     complete: () => {
+    //       console.log(`${mergeMap.name} completed`);
+    //     },
+    //   });
 
     // const example = (operator: any) => () => {
     //   from([1, 2, 3, 4, 5])
@@ -42,15 +44,5 @@ export class MapOperators {
     // };
 
     // example(mergeMap)();
-
-    // from([1, 2, 3, 4, 5])
-    //   .pipe(mergeMap((x: any) => of(x).pipe(delay(500))))
-    //   .subscribe({
-    //     next: console.log,
-    //     error: () => {},
-    //     complete: () => {
-    //       console.log(`${mergeMap.name} completed`);
-    //     },
-    //   });
   }
 }
