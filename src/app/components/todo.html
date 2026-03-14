@@ -1,3 +1,20 @@
 <h3>
   <a routerLink="/home">Home</a>
 </h3>
+
+<h2>Lista original:</h2>
+@for (item of listaTarefas(); track $index) {
+  <p>{{ item.id }}, {{ item.text }}, {{ item.isComplete }}</p>
+}
+<h2>Após "addTodo":</h2>
+@for (item of adicionar(); track $index) {
+  <p>{{ item.id }}, {{ item.text }}, {{ item.isComplete }}</p>
+}
+<h2>Após "removeTodo(2)":</h2>
+@for (item of remover(); track $index) {
+  <p>{{ item.id }}, {{ item.text }}, {{ item.isComplete }}</p>
+}
+<h2>Após "toggleTodo(3)":</h2>
+@for (item of toggle(); track $index) {
+  <p>{{ item.id }}, {{ item.text }}, {{ item.isComplete }}</p>
+}
