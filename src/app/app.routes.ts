@@ -10,6 +10,7 @@ import { FormBusca } from './components/form-busca';
 import { TesteTap } from './components/teste-tap';
 import { Todo } from './components/todo';
 import { MapOperators } from './components/map-operators';
+import { ObservableHell } from './components/observable-hell';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -23,4 +24,5 @@ export const routes: Routes = [
   { path: 'teste-tap', component: TesteTap },
   { path: 'todo', component: Todo },
   { path: 'map-operators', component: MapOperators },
+  { path: 'observable-hell', component: ObservableHell },
 ];
