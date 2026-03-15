@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { concatMap, delay, from, map, mergeMap, Observable, of, switchMap } from 'rxjs';
+import { concatMap, delay, exhaustMap, from, mergeMap, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-map-operators',
@@ -31,13 +31,23 @@ export class MapOperators {
     //     },
     //   });
 
+    // from([1, 2, 3, 4, 5])
+    //   .pipe(switchMap((x: any) => of(x).pipe(delay(1000))))
+    //   .subscribe({
+    //     next: console.log,
+    //     error: () => {},
+    //     complete: () => {
+    //       console.log(`switchMap complete`);
+    //     },
+    //   });
+
     from([1, 2, 3, 4, 5])
-      .pipe(switchMap((x: any) => of(x).pipe(delay(1000))))
+      .pipe(exhaustMap((x: any) => of(x).pipe(delay(1000))))
       .subscribe({
         next: console.log,
         error: () => {},
         complete: () => {
-          console.log(`switchMap complete`);
+          console.log(`exhaustMap complete`);
         },
       });
 
