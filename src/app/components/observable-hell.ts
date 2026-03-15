@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { of } from 'rxjs';
+import { concatMap, map, mergeMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-observable-hell',
@@ -19,12 +19,26 @@ export class ObservableHell {
   }
 
   constructor() {
-    this.getUser(this.id).subscribe((user) =>
-      this.getDetails(user.slug).subscribe((userDetails) => {
-        console.log(
-          `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? '' : 'not'} active.`,
-        );
-      }),
+    const result$ = this.getUser(this.id).pipe(
+      concatMap((user) =>
+        this.getDetails(user.slug).pipe(
+          map((userDetails) => {
+            console.log(
+              `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? '' : 'not'} active.`,
+            );
+          }),
+        ),
+      ),
     );
+
+    result$.subscribe();
+
+    // this.getUser(this.id).subscribe((user) =>
+    //   this.getDetails(user.slug).subscribe((userDetails) => {
+    //     console.log(
+    //       `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? '' : 'not'} active.`,
+    //     );
+    //   }),
+    // );
   }
 }
