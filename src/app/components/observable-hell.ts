@@ -63,9 +63,7 @@ export class ObservableHell {
           concatMap((user) =>
             this.getDetails(user.slug).pipe(
               map((userDetails) => {
-                console.log(
-                  `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? 'active' : 'not active'}.`,
-                );
+                return `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? 'active' : 'not active'}.`;
               }),
             ),
           ),
@@ -73,7 +71,7 @@ export class ObservableHell {
       ),
     );
 
-    result$.subscribe();
+    result$.subscribe((message) => console.log(message));
 
     const delayedResult$ = this.userIdList$.pipe(
       concatMap((id) =>
@@ -84,9 +82,7 @@ export class ObservableHell {
               concatMap((user) =>
                 this.getDetails(user.slug).pipe(
                   map((userDetails) => {
-                    console.log(
-                      `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? 'active' : 'not active'}.`,
-                    );
+                    return `${user.name} is ${userDetails.age} years old and is ${userDetails.isActive ? 'active' : 'not active'}.`;
                   }),
                 ),
               ),
@@ -96,7 +92,7 @@ export class ObservableHell {
       ),
     );
 
-    delayedResult$.subscribe();
+    delayedResult$.subscribe((message) => console.log(message));
 
     // this.getUser(this.id).subscribe((user) =>
     //   this.getDetails(user.slug).subscribe((userDetails) => {
